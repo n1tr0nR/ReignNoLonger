@@ -1,0 +1,28 @@
+{
+  "altar_ambience": {
+    "subtitle": "sound.reign_no_longer.altar_ambience",
+    "sounds": [
+      "reign_no_longer:soul_bound_altar_ambience"
+    ],
+    "stream": true
+  },
+  "altar_summon": {
+    "subtitle": "sound.reign_no_longer.altar_summon",
+    "sounds": [
+      "reign_no_longer:soul_bound_altar_place"
+    ]
+  },
+  "altar_break": {
+    "subtitle": "sound.reign_no_longer.altar_break",
+    "sounds": [
+      "reign_no_longer:soul_bound_altar_break"
+    ]
+  },
+  "retribution": {
+    "subtitle": "sound.reign_no_longer.retribution",
+    "sounds": [
+      "reign_no_longer:retribution"
+    ],
+    "stream": true
+  }
+}

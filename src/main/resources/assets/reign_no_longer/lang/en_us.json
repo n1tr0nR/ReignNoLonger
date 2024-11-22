@@ -1,0 +1,10 @@
+{
+  "block.reign_no_longer.soul_bound_altar": "§eSeal of Confinement",
+
+  "item.reign_no_longer.fractured_reliquary": "§eFractured Reliquary",
+  "item.reign_no_longer.forsaken_mark": "§eForsaken Mark",
+  "item.reign_no_longer.ancient_key": "§eAncient Key",
+
+  "tooltip.reign_no_longer.fractured_reliquary": "§8Marked by: §6n1tr0n__",
+  "tooltip.reign_no_longer.ancient_key": "§8Given by: §6Unknown"
+}
