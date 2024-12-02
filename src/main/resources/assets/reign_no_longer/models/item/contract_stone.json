@@ -1,0 +1,12 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "reign_no_longer:item/contract_stone"
+  },
+  "overrides": [
+    {
+      "predicate": { "signed": 1 },
+      "model": "reign_no_longer:item/contract_stone_signed"
+    }
+  ]
+}

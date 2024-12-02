@@ -2,12 +2,13 @@ package com.nitron.reign_no_longer.common.block.custom.functional;
 
 import com.nitron.reign_no_longer.ReignNoLonger;
 import com.nitron.reign_no_longer.common.item.ReignNoLongerItems;
-import com.nitron.reign_no_longer.lodestone.effects.ExampleParticleEffect;
+import com.nitron.reign_no_longer.lodestone.effects.BlockPlaceBoomEffect;
+import com.nitron.reign_no_longer.server.events.BorderManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,11 +16,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -28,42 +31,55 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.border.WorldBorder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class SoulBoundAltar extends Block {
+public class SealOfConfinementBlock extends Block {
     private static final ParticleEffect PARTICLE = ParticleTypes.CLOUD;
-    private static final int RADIUS = 25; // Adjust radius as needed
+    private static final int RADIUS = 40; // Adjust radius as needed
     private static final HashSet<UUID> trappedPlayers = new HashSet<>();
     private static final HashMap<BlockPos, Boolean> activeContainments = new HashMap<>();
 
-    public SoulBoundAltar(Settings settings) {
+    public SealOfConfinementBlock(Settings settings) {
         super(settings);
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
-        if (!world.isClient) {
-            activeContainments.put(pos, true);
-            world.playSound(null, pos, ReignNoLonger.altar_summon, SoundCategory.PLAYERS, 10, 1F);
-            world.playSound(null, pos, ReignNoLonger.retribution, SoundCategory.MUSIC, 20, 1F);
-            for(PlayerEntity player : world.getPlayers()){
-                player.sendMessage(Text.of("§6§lNOW PLAYING: §fRetribution §7- Undertale Yellow"), true);
-                applyKnockbackToNearbyPlayers(Objects.requireNonNull(world.getServer()).getOverworld(), pos);
+        if (!world.isClient && world.getServer() != null) {
+            ServerWorld serverWorld = world.getServer().getOverworld(); // Or your desired dimension
+            WorldBorder border = serverWorld.getWorldBorder();
+
+            // Configure the border
+            border.setCenter(pos.getX() + 0.5, pos.getZ() + 0.5);
+            border.setSize(65); // Radius size, adjust as needed
+            border.setDamagePerBlock(0.0); // No damage inside
+            border.setSafeZone(100000000);
+            border.setWarningBlocks(0);
+            world.playSound(null, pos, ReignNoLonger.seal_of_confinement, SoundCategory.MUSIC);
+            applyKnockbackToNearbyPlayers(serverWorld, pos);
+            for(int i = 0; i < 10; i ++){
+                BlockPlaceBoomEffect.spawnBlockPlaceBoomEffect(world, new Vec3d(pos.getX() + 0.5F, pos.getY() + 2, pos.getZ() + 0.5F));
             }
-            startContainment(world, pos, RADIUS);
+
+            System.out.println("Border placed at: " + pos);
         }
     }
 
-    private void applyKnockbackToNearbyPlayers(ServerWorld world, BlockPos blockPos) {
-        double radius = 10; // Radius to check for players
-        double knockbackStrength = 3; // Adjust for how far players are thrown
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        tooltip.add(Text.literal("Unstable").formatted(Formatting.DARK_GRAY));
+        super.appendTooltip(stack, world, tooltip, options);
+    }
 
-        // Center of the block
+    private void applyKnockbackToNearbyPlayers(ServerWorld world, BlockPos blockPos) {
+        double radius = 10;
+        double knockbackStrength = 3;
+
         Vec3d blockCenter = Vec3d.ofCenter(blockPos);
 
-        // Find players within the radius
         List<ServerPlayerEntity> nearbyPlayers = world.getPlayers(player ->
                 player.getPos().isInRange(blockCenter, radius)
         );
@@ -72,9 +88,8 @@ public class SoulBoundAltar extends Block {
             Vec3d knockbackDirection = player.getPos().subtract(blockCenter).normalize();
             Vec3d knockbackVelocity = knockbackDirection.multiply(knockbackStrength).add(0, 1, 0);
 
-            // Apply the knockback to the player
             player.setVelocity(knockbackVelocity);
-            player.velocityModified = true; // Notify the client about the velocity change
+            player.velocityModified = true;
         }
     }
 
@@ -82,6 +97,7 @@ public class SoulBoundAltar extends Block {
 
     private void startContainment(World world, BlockPos center, int radius) {
         activeContainmentCenters.add(center);
+        trappedPlayers.clear();
 
         for (PlayerEntity player : world.getPlayers()) {
             double distance = player.getPos().distanceTo(Vec3d.of(center));
@@ -110,18 +126,24 @@ public class SoulBoundAltar extends Block {
                     UUID playerId = player.getUuid();
 
                     if (trappedPlayers.contains(playerId)) {
-                        if (distance >= radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.ANCIENT_KEY))) {
+                        if (distance >= radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))) {
                             player.teleport(activeCenter.getX() + 0.5, activeCenter.getY() + 2, activeCenter.getZ() + 0.5);
                             player.sendMessage(Text.of("§cYou soul was re-summoned, you cannot leave."), true);
                             player.playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT, 0.5F, 1F);
                             serverWorld.spawnParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 0.5F, player.getZ(),
                                     10, 0.1F, 0.5F, 0.1F, 0.1);
                         }
+                        if(distance >= radius + 5 && player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))){
+                            trappedPlayers.remove(playerId);
+                        }
                     } else {
-                        if (distance < radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.ANCIENT_KEY))) {
+                        if (distance < radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))) {
                             Vec3d pushDirection = player.getPos().subtract(Vec3d.of(activeCenter)).normalize();
                             Vec3d pushTarget = Vec3d.of(activeCenter).add(pushDirection.multiply(radius + 1));
                             player.teleport(pushTarget.x, player.getY(), pushTarget.z);
+                        }
+                        if(distance < radius - 5 && player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))){
+                            trappedPlayers.add(playerId);
                         }
                     }
                 }
@@ -140,31 +162,22 @@ public class SoulBoundAltar extends Block {
     }
 
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!world.isClient() && world instanceof ServerWorld serverWorld) {
-            stopContainment(serverWorld, pos);
-            world.playSound(null, pos, ReignNoLonger.altar_break, SoundCategory.PLAYERS, 1F, 1F);
-            stopAllSounds(serverWorld, pos);
-        }
-        TIME = 0;
-        for (int i = 0; i < 1; i += 1) {
-            if (world instanceof World world1) {
-                Vec3d newPos = new Vec3d(pos.getX(), pos.getY() + 2, pos.getZ());
-                death(world1, newPos);
-            }
-        }
-        super.onBroken(world, pos, state);
-    }
-    private static long TIME;
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient && world.getServer() != null) {
+            ServerWorld serverWorld = world.getServer().getOverworld();
+            WorldBorder border = serverWorld.getWorldBorder();
 
-    private void death(World world, Vec3d pos){
-        ServerTickEvents.END_SERVER_TICK.register(serverWorld -> {
-            if(TIME <= 250) {
-                ExampleParticleEffect.spawnExampleParticles(world, pos);
-                TIME++;
-            }
-        });
+            // Reset the border or remove changes
+            border.setCenter(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getZ());
+            border.setSize(60000000.0); // Reset to default Minecraft border size
+            stopAllSounds(serverWorld, pos);
+
+            System.out.println("Border removed from: " + pos);
+        }
+        super.onBreak(world, pos, state, player);
     }
+
+
 
     private void spawnParticles(World world, BlockPos center, int radius, long time) {
         if (world instanceof ServerWorld serverWorld) {
@@ -172,13 +185,13 @@ public class SoulBoundAltar extends Block {
             double angle = time * rotationSpeed;
 
             serverWorld.spawnParticles(ParticleTypes.END_ROD, center.getX() + 0.5, center.getY(), center.getZ() + 0.5,
-                    2, (double) radius / 2, (double) radius / 2, (double) radius / 2, 0);
+                    1, (double) radius / 2, (double) radius / 2, (double) radius / 2, 0);
 
             serverWorld.spawnParticles(PARTICLE, center.getX() + 0.5, center.getY(), center.getZ() + 0.5,
-                    2, 0, 10, 0, 0);
+                    1, 0, 10, 0, 0);
 
-            for (double theta = 0; theta < Math.PI; theta += Math.PI / 10) {
-                for (double phi = 0; phi < 2 * Math.PI; phi += Math.PI / 10) {
+            for (double theta = 0; theta < Math.PI; theta += Math.PI / 20) {
+                for (double phi = 0; phi < 2 * Math.PI; phi += Math.PI / 20) {
                     double x = radius * Math.sin(theta) * Math.cos(phi);
                     double y = radius * Math.cos(theta);
                     double z = radius * Math.sin(theta) * Math.sin(phi);
@@ -192,7 +205,7 @@ public class SoulBoundAltar extends Block {
                     double worldY = center.getY() + y;
                     double worldZ = center.getZ() + 0.5 + rotatedZ;
 
-                    serverWorld.spawnParticles(PARTICLE, worldX, worldY, worldZ, 2, 0, 0, 0, 0.01);
+                    serverWorld.spawnParticles(PARTICLE, worldX, worldY, worldZ, 1, 0, 0, 0, 0.01);
                 }
             }
         }

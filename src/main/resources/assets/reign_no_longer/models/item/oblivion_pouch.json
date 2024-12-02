@@ -1,0 +1,12 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "reign_no_longer:item/oblivion_pouch"
+  },
+  "overrides": [
+    {
+      "predicate": { "filled": 1 },
+      "model": "reign_no_longer:item/oblivion_pouch_filled"
+    }
+  ]
+}

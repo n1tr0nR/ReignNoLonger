@@ -32,6 +32,7 @@ public class FracturedReliquaryItem extends Item {
             world.playSound(null, BlockPos.ofFloored(user.getPos()), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.PLAYERS, 10f, 1f);
         } else if(!world.isClient){
             user.sendMessage(Text.of("§cYour soul is not in danger..."));
+            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.PLAYERS);
         }
         return super.use(world, user, hand);
     }

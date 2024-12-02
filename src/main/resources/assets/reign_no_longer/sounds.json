@@ -18,10 +18,16 @@
       "reign_no_longer:soul_bound_altar_break"
     ]
   },
-  "retribution": {
-    "subtitle": "sound.reign_no_longer.retribution",
+  "seal_of_confinement": {
+    "subtitle": "sound.reign_no_longer.seal_of_confinement",
     "sounds": [
-      "reign_no_longer:retribution"
+      "reign_no_longer:seal_of_confinement"
+    ],
+    "stream": true
+  },"fates_severance_hit": {
+    "subtitle": "sound.reign_no_longer.fates_severance_hit",
+    "sounds": [
+      "reign_no_longer:fates_severance_hit"
     ],
     "stream": true
   }

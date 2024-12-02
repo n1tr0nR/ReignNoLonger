@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "reign_no_longer:item/sacred_chisel"
+  }
+}

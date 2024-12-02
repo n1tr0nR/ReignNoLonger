@@ -3,10 +3,16 @@
 	"package": "com.nitron.reign_no_longer.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"PlayerEntityMixin",
-		"MouseMixin"
+		"KeyboardMixin",
+		"MouseMixin",
+		"PlayerInventoryMixin",
+		"ScreenHandlerMixin"
 	],
 	"client": [
+		"ItemRendererAccessor",
+		"ItemRendererMixin",
+		"ModelLoaderMixin",
+		"PlayerEntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
