@@ -1,20 +1,23 @@
 {
   "block.reign_no_longer.seal_of_confinement": "§eSeal of Confinement",
 
-  "item.reign_no_longer.fractured_reliquary": "§eFractured Reliquary",
   "item.reign_no_longer.fates_severance": "§eFate's Severance",
+  "item.reign_no_longer.shattered_severance": "§eShattered Severance",
   "item.reign_no_longer.forsaken_mark": "§eForsaken Mark",
   "item.reign_no_longer.writ_of_passage": "§eWrit Of Passage",
   "item.reign_no_longer.contract_stone": "§eContract Stone",
-  "item.reign_no_longer.sacred_chisel": "§eSacred Chisel",
-  "item.reign_no_longer.souls_requiem": "§eSoul's Requiem",
-  "item.reign_no_longer.hollowed_heart": "§eHollowed Heart",
+  "item.reign_no_longer.nulliblade": "§eNulliblade",
+  "item.reign_no_longer.pure_balance": "§ePure Balance",
   "item.reign_no_longer.oblivion_pouch": "§eOblivion Pouch",
-  "item.reign_no_longer.oblivion_pouch.fullness": "%s/§k2560",
+  "item.reign_no_longer.oblivion_pouch.fullness": "%s/§kUnknown",
 
-  "tooltip.reign_no_longer.fractured_reliquary": "§8Marked by: §6n1tr0n__",
   "tooltip.reign_no_longer.writ_of_passage": "§8Given by: §6§kNULL",
   "tooltip.reign_no_longer.contract_stone_unsigned": "§8Right Click to sign",
 
-  "itemgroup.reign_no_longer.items": "Reign No Longer"
+  "itemgroup.reign_no_longer.items": "Reign No Longer",
+
+  "sound.reign_no_longer.fates_severance_shatter": "Vessel shatters",
+  "sound.reign_no_longer.fates_severance_hit": "Heavy blow",
+  "sound.reign_no_longer.implode_charge": "Charging",
+  "sound.reign_no_longer.error_growl": "Null errors"
 }

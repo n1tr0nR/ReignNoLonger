@@ -1,5 +1,6 @@
 package com.nitron.reign_no_longer.common.status_effect.custom;
 
+import com.nitron.reign_no_longer.ReignNoLonger;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
@@ -28,39 +29,24 @@ public class EternalBindEffect extends StatusEffect {
         return true;
     }
 
-    @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if(entity instanceof ServerPlayerEntity s){
-            s.changeGameMode(GameMode.SPECTATOR);
-        }
-        super.onRemoved(entity, attributes, amplifier);
-    }
-
     public static void spawnCylinderParticles(ServerPlayerEntity player, double radius, double height) {
-        // Get the world of the player
         ServerWorld world = (ServerWorld) player.getWorld();
 
-        // Get the player's position
         double x = player.getX();
         double y = player.getY() + 1;
         double z = player.getZ();
 
-        // Number of particles to spawn (adjust for desired density)
-        int particleCount = 5;
+        int particleCount = 10;
 
-        // Spawn particles in a cylinder around the player
         for (int i = 0; i < particleCount; i++) {
-            // Calculate angle for the circle
             float angle = (float) (i * (Math.PI * 2) / particleCount);
 
-            // Calculate the X and Z position using polar coordinates
             double particleX = x + radius * MathHelper.cos(angle);
             double particleZ = z + radius * MathHelper.sin(angle);
-
             double particleY = y + Math.random() * height - height / 2;
 
             world.spawnParticles(
-                    ParticleTypes.END_ROD,
+                    ReignNoLonger.CONFINE,
                     particleX, particleY, particleZ,
                     1,
                     0.0, 0.0, 0.0,

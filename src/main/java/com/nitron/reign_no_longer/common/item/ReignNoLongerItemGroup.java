@@ -17,11 +17,11 @@ public class ReignNoLongerItemGroup {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.reign_no_longer.items"))
                     .icon(() -> new ItemStack(ReignNoLongerItems.FATES_SEVERANCE)).entries((displayContext, entries) -> {
                         entries.add(ReignNoLongerItems.FORSAKEN_MARK);
+                        entries.add(ReignNoLongerItems.SHATTERED_SEVERANCE);
                         entries.add(ReignNoLongerItems.FATES_SEVERANCE);
                         entries.add(ReignNoLongerItems.WRIT_OF_PASSAGE);
                         entries.add(ReignNoLongerItems.CONTRACT_STONE);
                         entries.add(ReignNoLongerItems.SACRED_CHISEL);
-                        entries.add(ReignNoLongerItems.FRACTURED_RELIQUARY);
                         entries.add(ReignNoLongerBlocks.SEAL_OF_CONFINEMENT);
                         entries.add(ReignNoLongerItems.OBLIVION_POUCH);
                     }).build()

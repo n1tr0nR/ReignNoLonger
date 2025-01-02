@@ -11,7 +11,7 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 public enum ReignNoLongerToolMaterials implements ToolMaterial {
-    UNHOLY(4, 5000, 9.0F, 4.0F, 15, () -> {
+    UNHOLY(4, 90000, 9.0F, 4.0F, 15, () -> {
         return Ingredient.ofItems(new ItemConvertible[]{Items.NETHERITE_INGOT});
     });
     private final int miningLevel;

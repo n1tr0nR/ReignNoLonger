@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 public class OblivionPouchItem extends Item {
     private static final String ITEMS_KEY = "Items";
-    public static final int MAX_STORAGE = 999999999;
+    public static final int MAX_STORAGE = 6400;
     private static final int ITEM_BAR_COLOR = MathHelper.packRgb(0.4F, 0.4F, 1.0F);
 
     public OblivionPouchItem(Settings settings) {

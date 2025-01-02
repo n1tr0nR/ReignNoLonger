@@ -6,18 +6,6 @@
     ],
     "stream": true
   },
-  "altar_summon": {
-    "subtitle": "sound.reign_no_longer.altar_summon",
-    "sounds": [
-      "reign_no_longer:soul_bound_altar_place"
-    ]
-  },
-  "altar_break": {
-    "subtitle": "sound.reign_no_longer.altar_break",
-    "sounds": [
-      "reign_no_longer:soul_bound_altar_break"
-    ]
-  },
   "seal_of_confinement": {
     "subtitle": "sound.reign_no_longer.seal_of_confinement",
     "sounds": [
@@ -30,5 +18,20 @@
       "reign_no_longer:fates_severance_hit"
     ],
     "stream": true
-  }
+  },"fates_severance_shatter": {
+  "subtitle": "sound.reign_no_longer.fates_severance_shatter",
+  "sounds": [
+    "reign_no_longer:fates_severance_shatter"
+  ]
+  },"implode_charge": {
+  "subtitle": "sound.reign_no_longer.implode_charge",
+  "sounds": [
+    "reign_no_longer:implode_charge"
+    ]
+  },"error_growl": {
+  "subtitle": "sound.reign_no_longer.error_growl",
+  "sounds": [
+    "reign_no_longer:error_growl"
+  ]
+}
 }

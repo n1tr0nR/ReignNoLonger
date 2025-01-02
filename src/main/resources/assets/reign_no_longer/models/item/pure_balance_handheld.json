@@ -1,0 +1,32 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "reign_no_longer:item/pure_balance_handheld"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-45, -90, 0],
+			"translation": [0, 13, 0.75],
+			"scale": [1.7, 1.7, 1]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-45, 90, 0],
+			"translation": [0, 13, 0.75],
+			"scale": [1.7, 1.7, 1]
+		},
+		"firstperson_righthand": {
+			"rotation": [-28.25, -90, 0],
+			"translation": [1.88, 6.95, 1.63],
+			"scale": [1.6, 1.6, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-28.25, 90, 0],
+			"translation": [1.88, 6.95, 1.63],
+			"scale": [1.6, 1.6, 1]
+		},
+		"fixed": {
+			"scale": [1.6, 1.6, 1.2]
+		}
+	}
+}

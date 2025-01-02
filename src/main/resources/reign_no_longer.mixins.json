@@ -1,20 +1,24 @@
 {
-	"required": true,
-	"package": "com.nitron.reign_no_longer.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"KeyboardMixin",
-		"MouseMixin",
-		"PlayerInventoryMixin",
-		"ScreenHandlerMixin"
-	],
-	"client": [
-		"ItemRendererAccessor",
-		"ItemRendererMixin",
-		"ModelLoaderMixin",
-		"PlayerEntityRendererMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "com.nitron.reign_no_longer.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MouseMixin",
+    "PlayerEntityMixin",
+    "PlayerInventoryMixin",
+    "ScreenHandlerMixin"
+  ],
+  "client": [
+    "BackgroundRendererMixin",
+    "ItemRendererAccessor",
+    "ItemRendererMixin",
+    "LivingEntityRendererMixin",
+    "ModelLoaderMixin",
+    "PlayerEntityRendererMixin",
+    "PlayerHeldItemFeatureRendererMixin",
+    "WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

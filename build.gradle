@@ -33,6 +33,16 @@ repositories {
 			includeGroup("com.eliotlash.mclib")
 		}
 	}
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroup 'org.ladysnake'
+			includeGroupByRegex 'dev\\.onyxstudios.*'
+		}
+	}
 }
 
 fabricApi {
@@ -44,11 +54,9 @@ dependencies {
 	mappings "net.fabricmc:yarn:1.20.1+build.5:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "dev.emi:trinkets:3.7.2"
 	modImplementation("team.lodestar.lodestone:lodestone:${project.minecraft_version}-1.6.2.2-fabric")
-	//For this you also need the following
 	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.2")
 	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.2")
 	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.2.2")
@@ -59,7 +67,9 @@ dependencies {
 	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:1.20.1")
 
 	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
-	implementation("com.eliotlash.mclib:mclib:20")
+
+	modImplementation "org.ladysnake:satin:${satin_version}"
+	include "org.ladysnake:satin:${satin_version}"
 }
 
 processResources {

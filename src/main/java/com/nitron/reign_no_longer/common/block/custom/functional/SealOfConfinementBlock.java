@@ -36,10 +36,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static com.nitron.reign_no_longer.ReignNoLonger.BORDER;
+
 public class SealOfConfinementBlock extends Block {
     private static final ParticleEffect PARTICLE = ParticleTypes.CLOUD;
     private static final int RADIUS = 40; // Adjust radius as needed
-    private static final HashSet<UUID> trappedPlayers = new HashSet<>();
     private static final HashMap<BlockPos, Boolean> activeContainments = new HashMap<>();
 
     public SealOfConfinementBlock(Settings settings) {
@@ -52,19 +53,23 @@ public class SealOfConfinementBlock extends Block {
             ServerWorld serverWorld = world.getServer().getOverworld(); // Or your desired dimension
             WorldBorder border = serverWorld.getWorldBorder();
 
-            // Configure the border
+            /*
             border.setCenter(pos.getX() + 0.5, pos.getZ() + 0.5);
             border.setSize(65); // Radius size, adjust as needed
             border.setDamagePerBlock(0.0); // No damage inside
             border.setSafeZone(100000000);
             border.setWarningBlocks(0);
             world.playSound(null, pos, ReignNoLonger.seal_of_confinement, SoundCategory.MUSIC);
-            applyKnockbackToNearbyPlayers(serverWorld, pos);
             for(int i = 0; i < 10; i ++){
                 BlockPlaceBoomEffect.spawnBlockPlaceBoomEffect(world, new Vec3d(pos.getX() + 0.5F, pos.getY() + 2, pos.getZ() + 0.5F));
             }
 
-            System.out.println("Border placed at: " + pos);
+            System.out.println("Border placed at: " + pos);*/
+
+            applyKnockbackToNearbyPlayers(serverWorld, pos);
+            BORDER.updateBorder(pos.getX(), pos.getY(), pos.getZ(), 100);
+            BORDER.setOn(true);
+            ReignNoLonger.positionForTheDie = pos;
         }
     }
 
@@ -92,92 +97,14 @@ public class SealOfConfinementBlock extends Block {
             player.velocityModified = true;
         }
     }
-
-    private final Set<BlockPos> activeContainmentCenters = new HashSet<>();
-
-    private void startContainment(World world, BlockPos center, int radius) {
-        activeContainmentCenters.add(center);
-        trappedPlayers.clear();
-
-        for (PlayerEntity player : world.getPlayers()) {
-            double distance = player.getPos().distanceTo(Vec3d.of(center));
-            if (distance < radius - 0.5) {
-                trappedPlayers.add(player.getUuid());
-                player.addStatusEffect(new StatusEffectInstance(ReignNoLonger.SOUL_MARK, 999999, 0, false, false, false));
-            }
-        }
-
-        ServerTickEvents.END_WORLD_TICK.register(serverWorld -> {
-            if (serverWorld != world) return;
-
-            for (BlockPos activeCenter : new HashSet<>(activeContainmentCenters)) {
-                if (!activeContainments.getOrDefault(activeCenter, false)) {
-                    activeContainmentCenters.remove(activeCenter);
-                    trappedPlayers.clear();
-                    continue;
-                }
-
-                playAmbientSound(serverWorld, activeCenter);
-
-                spawnParticles(world, activeCenter, radius, world.getTime());
-
-                for (PlayerEntity player : world.getPlayers()) {
-                    double distance = player.getPos().distanceTo(Vec3d.of(activeCenter));
-                    UUID playerId = player.getUuid();
-
-                    if (trappedPlayers.contains(playerId)) {
-                        if (distance >= radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))) {
-                            player.teleport(activeCenter.getX() + 0.5, activeCenter.getY() + 2, activeCenter.getZ() + 0.5);
-                            player.sendMessage(Text.of("§cYou soul was re-summoned, you cannot leave."), true);
-                            player.playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT, 0.5F, 1F);
-                            serverWorld.spawnParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 0.5F, player.getZ(),
-                                    10, 0.1F, 0.5F, 0.1F, 0.1);
-                        }
-                        if(distance >= radius + 5 && player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))){
-                            trappedPlayers.remove(playerId);
-                        }
-                    } else {
-                        if (distance < radius && !player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))) {
-                            Vec3d pushDirection = player.getPos().subtract(Vec3d.of(activeCenter)).normalize();
-                            Vec3d pushTarget = Vec3d.of(activeCenter).add(pushDirection.multiply(radius + 1));
-                            player.teleport(pushTarget.x, player.getY(), pushTarget.z);
-                        }
-                        if(distance < radius - 5 && player.getInventory().contains(new ItemStack(ReignNoLongerItems.WRIT_OF_PASSAGE))){
-                            trappedPlayers.add(playerId);
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    public void stopContainment(World world, BlockPos center) {
-        if (activeContainments.containsKey(center)) {
-            activeContainments.put(center, false);
-            activeContainmentCenters.remove(center);
-            for(PlayerEntity player : world.getPlayers()){
-                player.clearStatusEffects();
-            }
-        }
-    }
-
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && world.getServer() != null) {
-            ServerWorld serverWorld = world.getServer().getOverworld();
-            WorldBorder border = serverWorld.getWorldBorder();
-
-            // Reset the border or remove changes
-            border.setCenter(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getZ());
-            border.setSize(60000000.0); // Reset to default Minecraft border size
-            stopAllSounds(serverWorld, pos);
-
-            System.out.println("Border removed from: " + pos);
+            BORDER.setOn(false);
+            ReignNoLonger.positionForTheDie = null;
         }
         super.onBreak(world, pos, state, player);
     }
-
-
 
     private void spawnParticles(World world, BlockPos center, int radius, long time) {
         if (world instanceof ServerWorld serverWorld) {
