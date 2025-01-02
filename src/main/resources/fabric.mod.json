@@ -3,14 +3,11 @@
 	"id": "reign_no_longer",
 	"version": "${version}",
 	"name": "Reign No Longer",
-	"description": "",
+	"description": "You've gotten this far, but you may Reign no Longer",
 	"authors": [
 		"n1tr0n__ (Owner)",
-		"TheTrueYak (Contributor)",
-		"Cordicus (Contributor)"
+		"TheTrueYak (Developer)"
 	],
-	"contact": {
-	},
 	"license": "CC0-1.0",
 	"icon": "assets/reign_no_longer/icon.png",
 	"environment": "*",

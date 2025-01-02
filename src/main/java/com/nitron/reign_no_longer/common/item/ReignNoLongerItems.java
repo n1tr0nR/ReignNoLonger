@@ -19,7 +19,6 @@ public class ReignNoLongerItems {
     public static Item FORSAKEN_MARK = registerItem("forsaken_mark", new ForsakenMarkItem(new FabricItemSettings().maxDamage(3)));
     public static Item WRIT_OF_PASSAGE = registerItem("writ_of_passage", new WritOfPassageItem(new FabricItemSettings().maxCount(1)));
     public static Item CONTRACT_STONE = registerItem("contract_stone", new ContractStoneItem(new FabricItemSettings().maxCount(1)));
-    public static Item SACRED_CHISEL = registerItem("sacred_chisel", new SwordItem(ToolMaterials.NETHERITE, 3, -3, new FabricItemSettings()));
     public static Item NULLIBLADE = registerItem("nulliblade", new VoidborneWeapons(ToolMaterials.NETHERITE, 10, -3, new FabricItemSettings()));
     public static Item PURE_BALANCE = registerItem("pure_balance", new VoidborneWeapons(ToolMaterials.NETHERITE, 15, -2, new FabricItemSettings()));
     public static Item FATES_SEVERANCE = registerItem("fates_severance", new FatesSeveranceItem());

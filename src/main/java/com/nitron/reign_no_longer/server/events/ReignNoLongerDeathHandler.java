@@ -61,14 +61,15 @@ public class ReignNoLongerDeathHandler {
                         ReignNoLonger.BORDER.setOn(false);
                         ReignNoLonger.positionForTheDie = null;
                         BlockPos pos = pb.getBlockPos();
-                        for (PlayerEntity pe : pb.getWorld().getPlayers()) {
+                        for (ServerPlayerEntity pe : pb.getServerWorld().getPlayers()) {
                             pe.sendMessage(Text.of(pb.getEntityName() + "'s body decayed out of reality"));
+                            //pe.getServerWorld().spawnParticles(ReignNoLonger.IMPLODE, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
+                            pe.getServerWorld().spawnParticles(pe, ReignNoLonger.IMPLODE, true, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 0);
+                            pe.getServerWorld().spawnParticles(pe, ReignNoLonger.RUNE, true, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
+                            pe.getServerWorld().spawnParticles(pe, ReignNoLonger.IMPLODEB, true, pos.getX(), pos.getY(), pos.getZ(), 3, 0, 0, 0, 0);
+                            pe.getServerWorld().spawnParticles(pe, ReignNoLonger.TEAR, true, pos.getX(), pos.getY() + 20, pos.getZ(), 1, 0, 0, 0, 0);
                         }
                         pb.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,2000, 200, false, false,  false));
-                        pb.getServerWorld().spawnParticles(ReignNoLonger.IMPLODE, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
-                        pb.getServerWorld().spawnParticles(ReignNoLonger.RUNE, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
-                        pb.getServerWorld().spawnParticles(ReignNoLonger.IMPLODEB, pos.getX(), pos.getY(), pos.getZ(), 3, 0, 0, 0, 0);
-                        pb.getServerWorld().spawnParticles(ReignNoLonger.TEAR, pos.getX(), pos.getY() + 20, pos.getZ(), 1, 0, 0, 0, 0);
                         return false;
                     }
                 }
@@ -133,11 +134,13 @@ public class ReignNoLongerDeathHandler {
                 Vec3d pos = serverPlayer.getPos();
                 BlockPos posB = serverPlayer.getBlockPos();
                 serverPlayer.addStatusEffect(BIND);
-                serverPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,2000, 200, false, false,  false));
-                serverPlayer.getServerWorld().spawnParticles(ReignNoLonger.IMPLODE, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
-                serverPlayer.getServerWorld().spawnParticles(ReignNoLonger.RUNE, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
-                serverPlayer.getServerWorld().spawnParticles(ReignNoLonger.IMPLODEB, pos.getX(), pos.getY(), pos.getZ(), 3, 0, 0, 0, 0);
                 serverPlayer.getServerWorld().playSound(null, posB, ReignNoLonger.implode_charge, SoundCategory.PLAYERS, 10, 1);
+                for (ServerPlayerEntity spe : serverPlayer.getServerWorld().getPlayers()){
+                    spe.getServerWorld().spawnParticles(spe, ReignNoLonger.IMPLODE, true, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 0);
+                    spe.getServerWorld().spawnParticles(spe, ReignNoLonger.RUNE, true, pos.getX(), pos.getY() + 0.1f, pos.getZ(), 1, 0, 0, 0, 0);
+                    spe.getServerWorld().spawnParticles(spe, ReignNoLonger.IMPLODEB, true, pos.getX(), pos.getY(), pos.getZ(), 3, 0, 0, 0, 0);
+                    spe.getServerWorld().spawnParticles(spe, ReignNoLonger.TEAR, true, pos.getX(), pos.getY() + 20, pos.getZ(), 1, 0, 0, 0, 0);
+                }
             }
         } else {
             p.kill();

@@ -1,7 +1,6 @@
 package com.nitron.reign_no_longer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.nitron.reign_no_longer.common.block.ReignNoLongerBlockEntities;
 import com.nitron.reign_no_longer.common.block.ReignNoLongerBlocks;
 import com.nitron.reign_no_longer.common.border.BorderManagment;
 import com.nitron.reign_no_longer.common.item.ReignNoLongerItems;
@@ -70,7 +69,6 @@ public class ReignNoLonger implements ModInitializer {
 		HudRenderCallback.EVENT.register(this::onHudRender);
 		registerEffects();
 		registerPredicates();
-		ReignNoLongerBlockEntities.register();
 		BORDER.setOn(false);
 		trappedPlayers.clear();
 
@@ -112,8 +110,10 @@ public class ReignNoLonger implements ModInitializer {
 			server.execute(() -> {
 				World world = player.getWorld();
 				if(world instanceof ServerWorld serverWorld){
-					serverWorld.spawnParticles(ReignNoLonger.ERROR, x, y, z, 1, 0, 0, 0, 0);
-					serverWorld.spawnParticles(ReignNoLonger.BOOM, x, y, z, 1, 0, 0, 0, 0);
+					for (ServerPlayerEntity pe : serverWorld.getPlayers()){
+						serverWorld.spawnParticles(pe, ReignNoLonger.ERROR, true, x, y, z, 1, 0, 0, 0, 0);
+						serverWorld.spawnParticles(pe, ReignNoLonger.BOOM, true, x, y, z, 1, 0, 0, 0, 0);
+					}
 					serverWorld.playSound(null, BlockPos.ofFloored(new Vec3d(x, y, z)), error_growl, SoundCategory.HOSTILE, 100, 1);
 				}
 			});

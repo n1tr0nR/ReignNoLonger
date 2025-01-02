@@ -21,7 +21,6 @@ public class ReignNoLongerItemGroup {
                         entries.add(ReignNoLongerItems.FATES_SEVERANCE);
                         entries.add(ReignNoLongerItems.WRIT_OF_PASSAGE);
                         entries.add(ReignNoLongerItems.CONTRACT_STONE);
-                        entries.add(ReignNoLongerItems.SACRED_CHISEL);
                         entries.add(ReignNoLongerBlocks.SEAL_OF_CONFINEMENT);
                         entries.add(ReignNoLongerItems.OBLIVION_POUCH);
                     }).build()
